@@ -192,37 +192,55 @@
         ctx.stroke();
       }
 
-      // Draw snake with glow
+      // Draw snake
       snake.forEach((part, i) => {
         const isHead = i === 0;
-        const gradient = ctx.createRadialGradient(
-          part.x * gridSize + gridSize / 2,
-          part.y * gridSize + gridSize / 2,
-          0,
-          part.x * gridSize + gridSize / 2,
-          part.y * gridSize + gridSize / 2,
-          gridSize
-        );
 
         if (isHead) {
+          // Head - bright with glow
+          const gradient = ctx.createRadialGradient(
+            part.x * gridSize + gridSize / 2,
+            part.y * gridSize + gridSize / 2,
+            0,
+            part.x * gridSize + gridSize / 2,
+            part.y * gridSize + gridSize / 2,
+            gridSize * 2
+          );
           gradient.addColorStop(0, '#ffffff');
-          gradient.addColorStop(0.3, '#00ff88');
+          gradient.addColorStop(0.4, '#00ff88');
           gradient.addColorStop(1, 'rgba(0, 255, 136, 0)');
+          ctx.fillStyle = gradient;
+          ctx.fillRect(part.x * gridSize - gridSize, part.y * gridSize - gridSize, gridSize * 3, gridSize * 3);
         } else {
+          // Body parts - with gradient fade
+          const gradient = ctx.createRadialGradient(
+            part.x * gridSize + gridSize / 2,
+            part.y * gridSize + gridSize / 2,
+            0,
+            part.x * gridSize + gridSize / 2,
+            part.y * gridSize + gridSize / 2,
+            gridSize
+          );
           gradient.addColorStop(0, '#4dff99');
-          gradient.addColorStop(1, 'rgba(0, 255, 136, 0)');
+          gradient.addColorStop(0.6, '#00cc6a');
+          gradient.addColorStop(1, 'rgba(0, 255, 136, 0.8)');
+          ctx.fillStyle = gradient;
+          ctx.fillRect(part.x * gridSize + 1, part.y * gridSize + 1, gridSize - 2, gridSize - 2);
         }
-
-        ctx.fillStyle = gradient;
-        ctx.fillRect(part.x * gridSize + 1, part.y * gridSize + 1, gridSize - 2, gridSize - 2);
 
         // Draw eyes on head
         if (isHead) {
           ctx.fillStyle = '#0f0c29';
-          const eyeSize = 3;
+          const eyeSize = 4;
           ctx.beginPath();
-          ctx.arc(part.x * gridSize + 6, part.y * gridSize + 6, eyeSize, 0, Math.PI * 2);
-          ctx.arc(part.x * gridSize + 14, part.y * gridSize + 6, eyeSize, 0, Math.PI * 2);
+          ctx.arc(part.x * gridSize + 8, part.y * gridSize + 8, eyeSize, 0, Math.PI * 2);
+          ctx.arc(part.x * gridSize + 16, part.y * gridSize + 8, eyeSize, 0, Math.PI * 2);
+          ctx.fill();
+          // Eye shine
+          ctx.fillStyle = '#ffffff';
+          ctx.beginPath();
+          ctx.arc(part.x * gridSize + 9, part.y * gridSize + 7, 2, 0, Math.PI * 2);
+          ctx.arc(part.x * gridSize + 17, part.y * gridSize + 7, 2, 0, Math.PI * 2);
           ctx.fill();
         }
       });
